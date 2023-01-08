@@ -33,9 +33,11 @@ runs:
       if: ${{ github.event_name == 'pull_request' }}
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      working-directory: ${{ inputs.environment }}/vault
       with:
         script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          const output = `### Environment: \`${{ inputs.environment }}\`
+          #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
           #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
           #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
@@ -61,11 +63,11 @@ runs:
       run: exit 1
       shell: bash
           
-    # - name: approve
-    #   if: ${{ github.event.inputs.approver_required == 'true' }}
-    #   uses: actions/request-approval@v2
-    #   with:
-    #     reviewers: octocat #TODO: change to some other approver
+    - name: approve
+      if: ${{ github.event.inputs.approver_required == 'true' }}
+      uses: actions/request-approval@v2
+      with:
+        reviewers: octocat #TODO: change to some other approver
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
       shell: bash
