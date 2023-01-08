@@ -11,13 +11,14 @@ on:
     branches:
       - main
       - foobar #TODO: remove this
-    paths:
-      - 'sandbox/vault/**'
-      - 'dev/vault/**'
-      - 'prod/vault/**'
+    # paths:
+    #   - 'sandbox/vault/**'
+    #   - 'dev/vault/**'
+    #   - 'prod/vault/**'
 
 jobs:
   terraform:
+    environment: ${{ matrix.environment }}
     runs-on: ubuntu-latest #TODO: change to self hosted
     strategy:
       matrix:
@@ -29,4 +30,4 @@ jobs:
         uses: ./.github/actions/terraform
         with:
           environment: ${{ matrix.environment }}
-        
+
