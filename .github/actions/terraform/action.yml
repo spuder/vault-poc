@@ -33,7 +33,6 @@ runs:
       if: ${{ github.event_name == 'pull_request' }}
       env:
         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-      working-directory: ${{ inputs.environment }}/vault
       with:
         script: |
           const output = `### Environment: \`${{ inputs.environment }}\`
