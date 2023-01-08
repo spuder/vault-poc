@@ -7,3 +7,4 @@ path "secret/my_app" {
 }
 EOT
 }
+
