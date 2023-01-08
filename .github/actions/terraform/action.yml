@@ -15,7 +15,7 @@ runs:
   using: "composite"
   steps:
     - name: ls
-      run: ls -la ${{ inputs.environment }}
+      run: ls -la
       shell: bash
     - name: terraform init
       run: terraform init -no-color
