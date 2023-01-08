@@ -6,18 +6,21 @@ inputs:
     description: 'The environment to run the terraform plan and apply against'
     required: true
     default: 'sandbox'
-  approver_required:
-    description: 'If true, then the terraform plan will require approval before running terraform apply'
-    required: false
-    default: 'false'
+  # approver_required:
+  #   description: 'If true, then the terraform plan will require approval before running terraform apply'
+  #   required: false
+  #   default: 'false'
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ${{ inputs.environment }}/vault
+
 runs:
   using: "composite"
   steps:
-    - name: checkout
-      uses: actions/checkout@v3
     - name: ls
       run: ls -la ${{ inputs.environment }}
-      shell: bash
     # - name: approve
     #   if: ${{ github.event.inputs.approver_required == 'true' }}
     #   uses: actions/request-approval@v2
@@ -25,4 +28,3 @@ runs:
     #     reviewers: octocat #TODO: change to some other approver
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
-      shell: bash
