@@ -6,6 +6,13 @@
 
 name: Terraform CI/CD
 
+permissions:
+  # These tokens are required for the step for previewing the terraform changes in a PR comment
+  id-token: write
+  pull-requests: write
+  contents: read
+
+  
 on:
   push:
     branches:
