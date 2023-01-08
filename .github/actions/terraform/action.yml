@@ -62,11 +62,11 @@ runs:
       run: exit 1
       shell: bash
           
-    - name: approve
-      if: ${{ github.event.inputs.approver_required == 'true' }}
-      uses: actions/request-approval@v2
-      with:
-        reviewers: octocat #TODO: change to some other approver
+    # - name: approve
+    #   if: ${{ github.event.inputs.approver_required == 'true' }}
+    #   uses: actions/request-approval@v2
+    #   with:
+    #     reviewers: octocat #TODO: change to some other approver
     
     - name: Terraform Apply
       if: ${{ github.event.inputs.approver_required == 'false' || github.event.inputs.approver_required == 'true' && github.event.inputs.approved == 'true' }}
