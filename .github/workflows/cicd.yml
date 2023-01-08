@@ -1,0 +1,32 @@
+# github action
+# if files are changed to the 'sandbox' folder, then 1) set environment = sandbox, 2) run terraform plan, 3) run terraform apply
+# if files are changed to the 'production' folder, then 1) set environment = production, 2) run terraform plan, 3) run terraform apply
+# if files are changed to the 'shared' folder, then 1) set environment = sandbox, 2) run terraform plan, 3) run terraform apply
+# if files are changed to the 'terraform' folder, then 1) set environment = sandbox, 2) run terraform plan, 3) run terraform apply
+
+name: Terraform CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - foobar #TODO: remove this
+    paths:
+      - 'sandbox/vault/**'
+      - 'dev/vault/**'
+      - 'prod/vault/**'
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest #TODO: change to self hosted
+    strategy:
+      matrix:
+        environment: [sandbox, dev, prod]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Terraform Plan
+        uses: ./.github/actions/terraform
+        with:
+          environment: ${{ matrix.environment }}
+        
