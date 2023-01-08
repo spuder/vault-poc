@@ -14,15 +14,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: cd
-      run: cd ${{ inputs.environment }}/vault
-      shell: bash
     - name: ls
       run: ls -la
       shell: bash
+      working-directory: ${{ inputs.environment }}/vault
     - name: terraform init
       run: terraform init -no-color
       shell: bash
+      working-directory: ${{ inputs.environment }}/vault
     # - name: approve
     #   if: ${{ github.event.inputs.approver_required == 'true' }}
     #   uses: actions/request-approval@v2
@@ -31,3 +30,4 @@ runs:
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
       shell: bash
+      working-directory: ${{ inputs.environment }}/vault
