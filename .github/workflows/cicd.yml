@@ -17,12 +17,12 @@ on:
     #   - 'prod/vault/**'
 
 jobs:
-  terraform:
-    environment: ${{ matrix.environment }}
+  terraform_setup:
+    # environment: ${{ matrix.environment }}
     runs-on: ubuntu-latest #TODO: change to self hosted
-    strategy:
-      matrix:
-        environment: [sandbox, dev, prod]
+    # strategy:
+    #   matrix:
+    #     environment: [sandbox, dev, prod]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -30,8 +30,31 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.3.7
-      - name: Terraform Plan
+
+  sandbox:
+    environment: sandbox
+    runs-on: ubuntu-latest
+    needs: terraform_setup
+    steps:
+      - name: Terraform (Sandbox)
         uses: ./.github/actions/terraform
         with:
-          environment: ${{ matrix.environment }}
-
+          environment: sandbox
+  dev:
+    environment: dev
+    runs-on: ubuntu-latest
+    needs: terraform_setup
+    steps:
+      - name: Terraform (Dev)
+        uses: ./.github/actions/terraform
+        with:
+          environment: dev
+  prod:
+    environment: prod
+    runs-on: ubuntu-latest
+    needs: [terraform_setup, dev]
+    steps:
+      - name: Terraform (Prod)
+        uses: ./.github/actions/terraform
+        with:
+          environment: prod

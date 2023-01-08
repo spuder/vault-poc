@@ -14,6 +14,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: cd
+      run: cd ${{ inputs.environment }}/vault
+      shell: bash
     - name: ls
       run: ls -la
       shell: bash
@@ -28,7 +31,3 @@ runs:
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
       shell: bash
-
-    defaults:
-      run:
-        working-directory: ${{ inputs.environment }}
