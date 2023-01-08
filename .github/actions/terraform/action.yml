@@ -11,16 +11,14 @@ inputs:
   #   required: false
   #   default: 'false'
 
-defaults:
-  run:
-    shell: bash
-    working-directory: ${{ inputs.environment }}/vault
+
 
 runs:
   using: "composite"
   steps:
     - name: ls
       run: ls -la ${{ inputs.environment }}
+      shell: bash
     # - name: approve
     #   if: ${{ github.event.inputs.approver_required == 'true' }}
     #   uses: actions/request-approval@v2
@@ -28,3 +26,4 @@ runs:
     #     reviewers: octocat #TODO: change to some other approver
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
+      shell: bash
