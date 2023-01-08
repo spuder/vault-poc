@@ -1,0 +1,8 @@
+provider "vault" {
+
+}
+
+terraform {
+
+}
+
