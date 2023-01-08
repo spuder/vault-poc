@@ -1,4 +1,3 @@
-# Find all .tf files and run terraform fmt
 
 name: Terraform Format
 
