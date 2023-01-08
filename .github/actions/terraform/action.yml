@@ -17,6 +17,7 @@ runs:
       uses: actions/checkout@v3
     - name: ls
       run: ls -la ${{ inputs.environment }}
+      shell: bash
     - name: approve
       if: ${{ github.event.inputs.approver_required == 'true' }}
       uses: actions/request-approval@v2
