@@ -69,7 +69,8 @@ runs:
     #     reviewers: octocat #TODO: change to some other approver
     
     - name: Terraform Apply
-      if: ${{ github.event.inputs.approver_required == 'false' || github.event.inputs.approver_required == 'true' && github.event.inputs.approved == 'true' }}
+      # only on main branch
+      if: ${{ github.ref == 'refs/heads/main' }}
       run: terraform apply -no-color terraform.plan
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
