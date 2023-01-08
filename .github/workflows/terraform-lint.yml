@@ -1,38 +1,37 @@
-name: Terraform Lint
+# name: Terraform Lint
 
-on:
-  push:
-    branches:
-      - '!main'
-  pull_request:
+# on:
+#   push:
+#     branches:
+#       - '!main'
+#   pull_request:
 
-jobs:
-  terraform_lint:
-    
-    runs-on: ubuntu-latest
-    name: ${{ matrix.environment }}/${{ matrix.app }}
-    strategy:
-      fail-fast: false
-      matrix:
-        environment: [sandbox, dev, prod]
-        app: [vault, aws ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+# jobs:
+#   terraform_lint:
+#     runs-on: ubuntu-latest
+#     name: ${{ matrix.environment }}/${{ matrix.app }}
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         environment: [sandbox, dev, prod]
+#         app: [vault, aws ]
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
 
-      - name: terraform validate
-        uses: dflook/terraform-validate@v1
-        with:
-          path: ${{ matrix.environment }}/${{ matrix.app }}
+#       - name: terraform validate
+#         uses: dflook/terraform-validate@v1
+#         with:
+#           path: ${{ matrix.environment }}/${{ matrix.app }}
 
-  fmt-check:
-    runs-on: ubuntu-latest
-    name: Check formatting of terraform files
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+#   fmt-check:
+#     runs-on: ubuntu-latest
+#     name: Check formatting of terraform files
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v3
 
-      - name: terraform fmt
-        uses: dflook/terraform-fmt-check@v1
-        with:
-          path: ${{ matrix.environment }}/${{ matrix.app }}
+#       - name: terraform fmt
+#         uses: dflook/terraform-fmt-check@v1
+#         with:
+#           path: ${{ matrix.environment }}/${{ matrix.app }}

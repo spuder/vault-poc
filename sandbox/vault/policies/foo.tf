@@ -1,11 +1,10 @@
-# resource "vault_policy" "example" {
-#   name = "dev-team"
+resource   "vault_policy" "example" {
+        name = "dev-team"
 
-#   policy = <<EOT
-# path "secret/my_app" {
-#   capabilities = ["update"]
-# }
-# EOT
-# }
-
+  policy = <<EOT
+path "secret/my_app" {
+  capabilities = ["update"]
+}
+EOT
+        }
 
