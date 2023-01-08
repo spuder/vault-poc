@@ -6,10 +6,10 @@ inputs:
     description: 'The environment to run the terraform plan and apply against'
     required: true
     default: 'sandbox'
-  # approver_required:
-  #   description: 'If true, then the terraform plan will require approval before running terraform apply'
-  #   required: false
-  #   default: 'false'
+  approver_required:
+    description: 'If true, then the terraform plan will require approval before running terraform apply'
+    required: false
+    default: 'false'
 
 runs:
   using: "composite"
