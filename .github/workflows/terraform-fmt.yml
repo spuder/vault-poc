@@ -5,9 +5,9 @@ name: Terraform Format
 on:
   push:
     branches:
+      - '*'
       - '!main'
-    # paths:
-    #   - '**.tf'
+
 jobs:
   terraform_fmt:
     runs-on: ubuntu-latest
