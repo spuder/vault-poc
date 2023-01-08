@@ -56,7 +56,6 @@ runs:
             repo: context.repo.repo,
             body: output
           })
-      shell: bash
     - name: Terraform Plan Status
       if: steps.tf_plan.outcome == 'failure'
       run: exit 1
