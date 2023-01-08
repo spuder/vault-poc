@@ -15,15 +15,8 @@ permissions:
   
 on:
   push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - '*'
-    # paths:
-    #   - 'sandbox/vault/**'
-    #   - 'dev/vault/**'
-    #   - 'prod/vault/**'
+
 
 jobs:
   terraform_setup:
