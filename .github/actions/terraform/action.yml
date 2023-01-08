@@ -24,3 +24,4 @@ runs:
         reviewers: octocat #TODO: change to some other approver
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
+      shell: bash
