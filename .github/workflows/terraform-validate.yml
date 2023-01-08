@@ -21,17 +21,10 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.3.7
-      # - name: Terraform init
-      #   run: |
-      #   find . -name "main.tf" -type f -exec dirname {} \; | sort -u | while read -r dir; do
-      #     echo "Running terraform init in $dir"
-      #     cd $dir
-      #     terraform init
-      #     cd -
-      #   done
       - name: Terraform Validate
         run: |
           find . -name "*.tf" -type f -exec dirname {} \; | sort -u | while read -r dir; do
             echo "Running terraform validate in $dir"
             terraform validate "$dir" -no-color
           done
+        shell: bash
