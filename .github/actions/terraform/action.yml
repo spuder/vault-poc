@@ -11,13 +11,14 @@ inputs:
   #   required: false
   #   default: 'false'
 
-
-
 runs:
   using: "composite"
   steps:
     - name: ls
       run: ls -la ${{ inputs.environment }}
+      shell: bash
+    - name: terraform init
+      run: terraform init -no-color
       shell: bash
     # - name: approve
     #   if: ${{ github.event.inputs.approver_required == 'true' }}
@@ -27,3 +28,7 @@ runs:
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
       shell: bash
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.environment }}
