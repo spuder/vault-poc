@@ -1,6 +1,6 @@
 ---
-name: 'Foobar'
-description: 'Foobar'
+name: 'Terraform'
+description: 'Run terraform plan and apply'
 inputs:
   environment:
     description: 'The environment to run the terraform plan and apply against'
@@ -29,6 +29,7 @@ runs:
       working-directory: ${{ inputs.environment }}/vault
       continue-on-error: true
 
+    #TODO: this step isn't running
     - uses: actions/github-script@v6
       if: ${{ github.event_name == 'pull_request' }}
       env:
