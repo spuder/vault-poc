@@ -1,0 +1,38 @@
+name: Terraform Lint
+
+on:
+  push:
+    branches:
+      - '!main'
+    paths:
+      - '**.tf'
+
+jobs:
+  terraform_lint:
+    
+    runs-on: ubuntu-latest
+    name: Validate terraform configuration
+    strategy:
+      matrix:
+        environment: [sandbox, dev, prod]
+        app: [vault, aws ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: terraform validate
+        uses: dflook/terraform-validate@v1
+        with:
+          path: ${{ matrix.environment }}/${{ matrix.app }}
+
+  fmt-check:
+    runs-on: ubuntu-latest
+    name: Check formatting of terraform files
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: terraform fmt
+        uses: dflook/terraform-fmt-check@v1
+        with:
+          path: ${{ matrix.environment }}/${{ matrix.app }}
