@@ -18,11 +18,11 @@ runs:
     - name: ls
       run: ls -la ${{ inputs.environment }}
       shell: bash
-    - name: approve
-      if: ${{ github.event.inputs.approver_required == 'true' }}
-      uses: actions/request-approval@v2
-      with:
-        reviewers: octocat #TODO: change to some other approver
+    # - name: approve
+    #   if: ${{ github.event.inputs.approver_required == 'true' }}
+    #   uses: actions/request-approval@v2
+    #   with:
+    #     reviewers: octocat #TODO: change to some other approver
     - name: deploy
       run: echo "deploying to ${{ inputs.environment }}"
       shell: bash
