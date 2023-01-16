@@ -78,7 +78,7 @@ runs:
           <details><summary>Show Plan</summary>
 
           \`\`\`\n
-          ${step.plan.outputs.TF_OUTPUT}
+          ${{ steps.plan.outputs.TF_OUTPUT }}
           \`\`\`
 
           </details>
