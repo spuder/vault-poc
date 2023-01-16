@@ -58,7 +58,7 @@ runs:
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
-        # PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        PLAN: "terraform\n${{ steps.plan.outputs.TF_OUTPUT }}"
       with:
         github-token: ${{ inputs.github_token }}
         script: |
@@ -78,7 +78,7 @@ runs:
           <details><summary>Show Plan</summary>
 
           \`\`\`\n
-          ${{ steps.plan.outputs.TF_OUTPUT }}
+          ${process.env.PLAN}
           \`\`\`
 
           </details>
