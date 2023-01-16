@@ -41,6 +41,7 @@ jobs:
         uses: ./.github/actions/terraform
         with:
           environment: sandbox
+          github_token: ${{ secrets.GITHUB_TOKEN }}
   # dev:
   #   environment: dev
   #   runs-on: ubuntu-latest
