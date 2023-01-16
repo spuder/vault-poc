@@ -65,7 +65,7 @@ runs:
           <details><summary>Validation Output</summary>
 
           \`\`\`\n
-          ${{ steps.validate.outputs.stdout }}
+          ${{ steps.validate.outputs.TF_OUTPUT }}
           \`\`\`
 
           </details>
