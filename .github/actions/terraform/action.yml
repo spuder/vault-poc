@@ -47,7 +47,10 @@ runs:
 
     - name: terraform plan
       id: plan
-      run: terraform plan -no-color
+      run: |
+        tf_output=$(terraform plan -no-color)
+        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
+        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
       continue-on-error: true
@@ -55,7 +58,7 @@ runs:
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        # PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
         github-token: ${{ inputs.github_token }}
         script: |
@@ -75,7 +78,7 @@ runs:
           <details><summary>Show Plan</summary>
 
           \`\`\`\n
-          ${process.env.PLAN}
+          ${step.plan.outputs.TF_OUTPUT}
           \`\`\`
 
           </details>
