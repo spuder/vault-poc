@@ -18,16 +18,30 @@ runs:
       run: ls -la
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      continue-on-error: true
+      working-directory: ${{ inputs.environment }}/vault
+
     - name: terraform init
       run: terraform init -no-color
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+      working-directory: ${{ inputs.environment }}/vault
+
     - name: terraform plan
       id: plan
       run: terraform plan -no-color
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
       continue-on-error: true
+
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
       env:
