@@ -12,11 +12,9 @@ permissions:
   pull-requests: write
   contents: read
 
-  
 on:
   push:
   pull_request:
-
 
 jobs:
   terraform_setup:
