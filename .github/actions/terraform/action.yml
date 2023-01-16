@@ -39,9 +39,9 @@ runs:
     - name: Terraform Validate
       id: validate
       run: |
-        output=$(terraform validate -no-color)
-        echo "${output}" >> $GITHUB_STEP_SUMMARY
-        echo "${output}" >> $GITHUB_OUTPUT
+        tf_output=$(terraform validate -no-color)
+        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
+        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
 
