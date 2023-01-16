@@ -25,25 +25,26 @@ runs:
 
     - name: Terraform fmt
       id: fmt
-      run: terraform fmt -check
+      run: $(terraform fmt -check) >> $GITHUB_OUTPUT
       shell: bash
       continue-on-error: true
       working-directory: ${{ inputs.environment }}/vault
 
     - name: terraform init
-      run: terraform init -no-color
+      id: init
+      run: $(terraform init -no-color) >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
 
     - name: Terraform Validate
       id: validate
-      run: terraform validate -no-color
+      run: $(terraform validate -no-color) >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
 
     - name: terraform plan
       id: plan
-      run: terraform plan -no-color
+      run: $(terraform plan -no-color) >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
       continue-on-error: true
