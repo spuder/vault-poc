@@ -40,18 +40,20 @@ runs:
     - name: Terraform Validate
       id: validate
       run: |
-        tf_output=$(terraform validate -no-color)
-        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
-        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
+        terraform validate -no-color
+        # tf_output=$(terraform validate -no-color)
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
 
     - name: terraform plan
       id: plan
       run: |
-        tf_output=$(terraform plan -no-color)
-        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
-        echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
+        terraform plan -no-color
+        # tf_output=$(terraform plan -no-color)
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
       continue-on-error: true
