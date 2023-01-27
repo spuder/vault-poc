@@ -10,6 +10,11 @@ inputs:
     description: 'If true, then the terraform plan will require approval before running terraform apply'
     required: false
     default: 'false'
+  github_token:
+    description: 'Github token'
+    required: true
+
+
 
 runs:
   using: "composite"
@@ -18,28 +23,59 @@ runs:
       run: ls -la
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      shell: bash
+      continue-on-error: true
+      working-directory: ${{ inputs.environment }}/vault
+
     - name: terraform init
+      id: init
       run: terraform init -no-color
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
+
+    - name: Terraform Validate
+      id: validate
+      run: |
+        terraform validate -no-color
+        # tf_output=$(terraform validate -no-color)
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
+      shell: bash
+      working-directory: ${{ inputs.environment }}/vault
+
     - name: terraform plan
       id: plan
-      run: terraform plan -no-color -out=terraform.plan
+      run: |
+        terraform plan -no-color
+        # tf_output=$(terraform plan -no-color)
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_STEP_SUMMARY
+        # echo "TF_OUTPUT=${tf_output}" >> $GITHUB_OUTPUT
       shell: bash
       working-directory: ${{ inputs.environment }}/vault
       continue-on-error: true
 
-    #TODO: this step isn't running
     - uses: actions/github-script@v6
-      if: ${{ github.event_name == 'pull_request' }}
+      if: github.event_name == 'pull_request'
       env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        PLAN: "terraform\n${{ steps.plan.output.stdout }}"
       with:
+        github-token: ${{ inputs.github_token }}
         script: |
-          const output = `### Environment: \`${{ inputs.environment }}\`
-          #### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
           #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
           #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          <details><summary>Validation Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.TF_OUTPUT }}
+          \`\`\`
+
+          </details>
+
           #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
 
           <details><summary>Show Plan</summary>
@@ -50,7 +86,7 @@ runs:
 
           </details>
 
-          *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
           github.rest.issues.createComment({
             issue_number: context.issue.number,
@@ -58,16 +94,59 @@ runs:
             repo: context.repo.repo,
             body: output
           })
-    - name: Terraform Plan Status
-      if: steps.plan.outcome == 'failure'
-      run: exit 1
-      shell: bash
-          
-    # - name: approve
-    #   if: ${{ github.event.inputs.approver_required == 'true' }}
-    #   uses: actions/request-approval@v2
+    # #TODO: this step isn't running
+    # - uses: actions/github-script@v6
+    #   if: ${{ github.event_name == 'pull_request' }}
+    #   env:
+    #     PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
     #   with:
-    #     reviewers: octocat #TODO: change to some other approver
+    #     script: |
+    #       const run_url = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
+    #       const run_link = '<a href="' + run_url + '">Actions</a>.'
+    #       const fs = require('fs')
+    #       const plan_file = fs.readFileSync('plan.out', 'utf8')
+    #       const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
+    #       const truncated_message = plan_file.length > 65000 ? "Output is too long and was truncated. You can read full Plan in " + run_link + "<br /><br />" : ""
+    #       const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+    #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+    #       #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+    #       <details><summary>Validation Output</summary>
+
+    #       \`\`\`\n
+    #       ${{ steps.validate.outputs.stdout }}
+    #       \`\`\`
+
+    #       </details>
+
+    #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          
+    #       <details><summary>Show Plan</summary>
+          
+    #       \`\`\`\n
+    #       ${plan}
+    #       \`\`\`
+          
+    #       </details>
+    #       ${truncated_message}
+
+    #       *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ github.workspace }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+    #       github.rest.issues.createComment({
+    #         issue_number: context.issue.number,
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: output
+    #       })
+    # - name: Terraform Plan Status
+    #   if: steps.plan.outcome == 'failure'
+    #   run: exit 1
+    #   shell: bash
+          
+    - name: approve
+      if: ${{ github.event.inputs.approver_required == 'true' }}
+      uses: actions/request-approval@v2
+      with:
+        reviewers: octocat #TODO: change to some other approver
     
     - name: Terraform Apply
       # only on main branch
