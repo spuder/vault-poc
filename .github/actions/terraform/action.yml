@@ -15,6 +15,7 @@ inputs:
     required: true
 
 
+
 runs:
   using: "composite"
   steps:
@@ -57,8 +58,8 @@ runs:
 
     - uses: actions/github-script@v6
       if: github.event_name == 'pull_request'
-      # env:
-      #   PLAN: "terraform\n${{ steps.plan.outputs.TF_OUTPUT }}"
+      env:
+        PLAN: "terraform\n${{ steps.plan.output.stdout }}"
       with:
         github-token: ${{ inputs.github_token }}
         script: |
@@ -78,12 +79,12 @@ runs:
           <details><summary>Show Plan</summary>
 
           \`\`\`\n
-          ${{ steps.plan.outputs.TF_OUTPUT }}
+          ${process.env.PLAN}
           \`\`\`
 
           </details>
 
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Environment: \`${{ inputs.environment }}\`, Workflow: \`${{ github.workflow }}\`*`;
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
 
           github.rest.issues.createComment({
             issue_number: context.issue.number,
@@ -139,15 +140,15 @@ runs:
     #   run: exit 1
     #   shell: bash
           
-    # # - name: approve
-    # #   if: ${{ github.event.inputs.approver_required == 'true' }}
-    # #   uses: actions/request-approval@v2
-    # #   with:
-    # #     reviewers: octocat #TODO: change to some other approver
+    - name: approve
+      if: ${{ github.event.inputs.approver_required == 'true' }}
+      uses: actions/request-approval@v2
+      with:
+        reviewers: octocat #TODO: change to some other approver
     
-    # - name: Terraform Apply
-    #   # only on main branch
-    #   if: ${{ github.ref == 'refs/heads/main' }}
-    #   run: terraform apply -no-color terraform.plan
-    #   shell: bash
-    #   working-directory: ${{ inputs.environment }}/vault
+    - name: Terraform Apply
+      # only on main branch
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: terraform apply -no-color terraform.plan
+      shell: bash
+      working-directory: ${{ inputs.environment }}/vault
