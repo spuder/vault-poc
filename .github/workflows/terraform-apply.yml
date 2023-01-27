@@ -54,6 +54,7 @@ jobs:
         with:
           environment: dev
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          approver_required: true
 
   # prod:
   #   environment: prod
